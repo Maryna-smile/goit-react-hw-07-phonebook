@@ -1,12 +1,17 @@
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNewContact } from 'redux/operations';
 
 import css from './ContactForm.module.css';
+import { selectContacts } from 'redux/selectors';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -19,22 +24,27 @@ export const ContactForm = () => {
     setNumber(e.target.value);
   };
 
-  const makeObjNewUser = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    const newUser = {
+    const newContact = {
       name,
       number,
-      id: nanoid(),
     };
 
-    dispatch(addContact(newUser));
+    if (contacts.some(el => el.name === name)) {
+      toast('Contact already exists');
+      return;
+    }
+
+    dispatch(addNewContact(newContact));
     setName('');
     setNumber('');
   };
 
   return (
     <>
-      <form onSubmit={makeObjNewUser}>
+      <ToastContainer />
+      <form onSubmit={handleSubmit}>
         <label className={css.label} htmlFor="">
           Name
           <input
