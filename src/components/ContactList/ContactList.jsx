@@ -4,16 +4,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectContacts, selectFilter } from 'redux/selectors';
 import { removeContact } from 'redux/operations';
 
-
-
 export const ContactList = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
 
-  const filteredContacts = contacts.filter(el => el.name.toLowerCase().trim().includes(filter.toLowerCase().trim()))
+  const filteredContacts = contacts.filter(el =>
+    el.name.toLowerCase().trim().includes(filter.toLowerCase().trim())
+  );
 
-const handleRemove = (id) => dispatch(removeContact(id))
+  const handleRemove = id => dispatch(removeContact(id));
 
   return (
     <ul className={css.list}>
@@ -30,5 +30,3 @@ const handleRemove = (id) => dispatch(removeContact(id))
     </ul>
   );
 };
-
-
